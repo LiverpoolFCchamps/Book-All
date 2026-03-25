@@ -1,6 +1,9 @@
 # Book-All
 import streamlit as st
 import requests
+@st.cache_data
+@st.cache_resource
+
 
 # ── Page config ─────────────────────────────────────────────────────────────── 
 st.set_page_config(

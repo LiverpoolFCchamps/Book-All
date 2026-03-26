@@ -374,7 +374,7 @@ elif st.session_state.page == "add":
                     "genre": genre, "price": price, "year": year,
                     "cover": cover, "cover_l": cover, "pages": "", "isbn": "",
                 }
-                st.success(f"„{title}" беше добавена!")
+                st.success(f"Книгата беше добавена!")
                 st.session_state.page = "library"
                 st.rerun()
 

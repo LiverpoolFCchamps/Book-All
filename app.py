@@ -1,10 +1,9 @@
+import time
+import random
 import streamlit as st
 import requests
-@st.cache_data
-@st.cache_resource
 
-
-# ── Page config ─────────────────────────────────────────────────────────────── 
+# ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Моята библиотека",
     page_icon="📚",
@@ -45,6 +44,7 @@ def cover_url(cover_id, size="M"):
         return f"https://covers.openlibrary.org/b/id/{cover_id}-{size}.jpg"
     return None
 
+@st.cache_data
 def search_books(query, page=0):
     if not query.strip():
         return [], 0
@@ -66,6 +66,7 @@ def search_books(query, page=0):
     except Exception:
         return [], 0
 
+@st.cache_data
 def fetch_work_details(work_key):
     try:
         r = requests.get(
@@ -270,6 +271,7 @@ elif st.session_state.page == "search":
 
         # Pagination
         p = st.session_state.search_page
+        max_page = max(0, (total - 1) // RESULTS_PER_PAGE)
         pa, _, pb = st.columns([1, 6, 1])
         with pa:
             if p > 0 and st.button("← Предишна"):
@@ -280,7 +282,7 @@ elif st.session_state.page == "search":
                 st.session_state.search_total   = tot
                 st.rerun()
         with pb:
-            if st.button("Следваща →"):
+            if p < max_page and st.button("Следваща →"):
                 st.session_state.search_page += 1
                 with st.spinner("Зареждане..."):
                     res, tot = search_books(st.session_state.search_query, st.session_state.search_page)
@@ -321,7 +323,6 @@ elif st.session_state.page == "search":
                     if already:
                         st.success("✓ В библиотеката")
                     else:
-                        # Use expander for price input so layout doesn't jump
                         with st.expander("+ Добави в библиотеката"):
                             price = st.number_input(
                                 "Цена (лв.)", min_value=0.0, step=0.50,
@@ -367,14 +368,13 @@ elif st.session_state.page == "add":
             if not title or not author:
                 st.error("Моля, попълнете заглавие и автор.")
             else:
-                import time, random
                 key = f"manual_{int(time.time()*1000)}_{random.randint(0, 9999)}"
                 st.session_state.my_books[key] = {
                     "key": key, "title": title, "author": author,
                     "genre": genre, "price": price, "year": year,
                     "cover": cover, "cover_l": cover, "pages": "", "isbn": "",
                 }
-                st.success(f"Книгата беше добавена!")
+                st.success("Книгата беше добавена!")
                 st.session_state.page = "library"
                 st.rerun()
 

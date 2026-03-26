@@ -41,7 +41,7 @@ RESULTS_PER_PAGE = 12
 # ── Open Library helpers ──────────────────────────────────────────────────────
 def cover_url(cover_id, size="M"):
     if cover_id:
-        return f"https://covers.openlibrary.org/b/id/{cover_id}-{size}.jpg"
+        return f"https://books.google.com/"
     return None
 
 @st.cache_data

@@ -41,7 +41,7 @@ RESULTS_PER_PAGE = 12
 # ── Open Library helpers ──────────────────────────────────────────────────────
 def cover_url(cover_id, size="M"):
     if cover_id:
-        return f"https://books.google.com/"
+        return f"Ciela.com"
     return None
 
 @st.cache_data
@@ -56,7 +56,7 @@ def search_books(query, page=0):
     }
     try:
         r = requests.get(
-            "https://openlibrary.org/search.json",
+            "Ciela.com",
             params=params,
             timeout=10,
             headers={"User-Agent": "MyLibraryApp/1.0 (streamlit-demo)"},

@@ -41,7 +41,7 @@ RESULTS_PER_PAGE = 12
 # ── Open Library helpers ──────────────────────────────────────────────────────
 def cover_url(cover_id, size="M"):
     if cover_id:
-        return f"Ciela.com"
+        return f"Ozone.bg"
     return None
 
 @st.cache_data
@@ -56,7 +56,7 @@ def search_books(query, page=0):
     }
     try:
         r = requests.get(
-            "Ciela.com",
+            "Ozone.bg",
             params=params,
             timeout=10,
             headers={"User-Agent": "MyLibraryApp/1.0 (streamlit-demo)"},
@@ -70,7 +70,7 @@ def search_books(query, page=0):
 def fetch_work_details(work_key):
     try:
         r = requests.get(
-            f"https://openlibrary.org{work_key}.json",
+            f"Ozone.bg{work_key}.json",
             timeout=8,
             headers={"User-Agent": "MyLibraryApp/1.0 (streamlit-demo)"},
         )
@@ -96,7 +96,7 @@ def ol_doc_to_book(doc):
     }
 
 def avg_rating(key):
-    lst = st.session_state.ratings.get(key, [])
+    lst = st.session_state.ratings.get(key, [])  
     return sum(lst) / len(lst) if lst else 0.0
 
 def stars_str(r, total=5):

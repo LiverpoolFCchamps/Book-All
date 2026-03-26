@@ -350,6 +350,12 @@ elif st.session_state.page == "search":
 # ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "add":
     st.subheader("➕ Добави книга ръчно")
+
+    # Cover preview lives OUTSIDE the form (st.image not allowed inside st.form)
+    cover_preview = st.session_state.get("_add_cover_preview", "")
+    if cover_preview:
+        st.image(cover_preview, width=100)
+
     with st.form("manual_form", clear_on_submit=True):
         c1, c2 = st.columns(2)
         with c1:
@@ -361,22 +367,26 @@ elif st.session_state.page == "add":
             year  = st.text_input("Година")
             cover = st.text_input("URL на корицата")
 
-        if cover:
-            st.image(cover, width=100)
+        submitted = st.form_submit_button("✅ Добави", use_container_width=True, type="primary")
 
-        if st.form_submit_button("✅ Добави", use_container_width=True, type="primary"):
-            if not title or not author:
-                st.error("Моля, попълнете заглавие и автор.")
-            else:
-                key = f"manual_{int(time.time()*1000)}_{random.randint(0, 9999)}"
-                st.session_state.my_books[key] = {
-                    "key": key, "title": title, "author": author,
-                    "genre": genre, "price": price, "year": year,
-                    "cover": cover, "cover_l": cover, "pages": "", "isbn": "",
-                }
-                st.success("Книгата беше добавена!")
-                st.session_state.page = "library"
-                st.rerun()
+    # Handle submission OUTSIDE the form to allow st.rerun()
+    if submitted:
+        if not title or not author:
+            st.error("Моля, попълнете заглавие и автор.")
+        else:
+            key = f"manual_{int(time.time()*1000)}_{random.randint(0, 9999)}"
+            st.session_state.my_books[key] = {
+                "key": key, "title": title, "author": author,
+                "genre": genre, "price": price, "year": year,
+                "cover": cover, "cover_l": cover, "pages": "", "isbn": "",
+            }
+            st.session_state.pop("_add_cover_preview", None)
+            st.success("Книгата беше добавена!")
+            st.session_state.page = "library"
+            st.rerun()
+    elif cover:
+        # Update preview state so it shows on next render
+        st.session_state["_add_cover_preview"] = cover
 
 
 # ══════════════════════════════════════════════════════════════════════════════
